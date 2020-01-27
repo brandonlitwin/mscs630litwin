@@ -25,12 +25,33 @@ import java.nio.file.Paths;
  */
 public class Driver_lab1 {
   static final int ASCII_VALUE_OF_A = 65;
+  /**
+   * main
+   *
+   * This class reads an input String, calls the str2int method to
+   * transform it into an integer array, then uses a StringBuilder
+   * to convert the array into a string with a space between each 
+   * integer, and trims off trailing whitespace. 
+   *
+   * Parameters:
+   *   inputLine: The String that will contain the current line of input.
+   *   encryptedIntArray: The return value from str2int
+   *   encryptedString: An instance of StringBuilder which is used to 
+   *                    convert the integer array to a string for output.
+   * 
+   * Return value: A System output containing the encrypted string.
+   */
   public static void main(String[]args) {
     try (BufferedReader reader = new 
          BufferedReader(new InputStreamReader(System.in))) {
       String inputLine;
       while ((inputLine = reader.readLine()) != null) {
-        System.out.println(Arrays.toString(str2int(inputLine)));
+        int[] encryptedIntArray = str2int(inputLine);
+        StringBuilder encryptedString = new StringBuilder();
+        for (int i = 0; i < encryptedIntArray.length; i++) {
+          encryptedString.append(encryptedIntArray[i] + " ");
+        }
+        System.out.println(encryptedString.toString().trim());
       }
     } catch (IOException e) {
         e.printStackTrace();
@@ -60,7 +81,7 @@ public class Driver_lab1 {
       char charToEncrypt = plaintext.charAt(i);
       int charToInt = (int) (Character.toUpperCase(charToEncrypt));
       // Any value below the ASCII value of A must be a space. 
-      //Therefore the encrypted value is 26.
+      // Therefore, the encrypted value is 26.
       if (charToInt < ASCII_VALUE_OF_A) {
         encryptedArray[i] = 26;
       } else {
