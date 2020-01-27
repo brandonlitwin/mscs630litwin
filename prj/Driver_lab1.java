@@ -9,7 +9,12 @@
  * This file contains the declaration of the driver 
  * for the Lab 1 cryptography algorithm.
  */
-
+ import java.util.stream.Stream;
+ import java.io.BufferedReader;
+ import java.io.InputStreamReader;
+ import java.io.IOException;
+ import java.nio.file.Files;
+ import java.nio.file.Paths;
  /** 
   * Driver_lab1
   *
@@ -18,6 +23,16 @@
   * with a space becoming 26.
   */
  public class Driver_lab1 {
+     public static void main(String[]args) {
+         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+             String inputLine;
+             while ((inputLine = reader.readLine()) != null) {
+                 System.out.println(inputLine);
+             }
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+     }
 
  }
  /** 
@@ -30,6 +45,6 @@
 
   * Return value: an integer array containing the encrypted plaintext.
   */
- public class int[] str2int(String plaintext) {
+ //public class int[] str2int(String plaintext) {
 
- }
+ //}
