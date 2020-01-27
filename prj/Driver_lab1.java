@@ -10,6 +10,7 @@
  * for the Lab 1 cryptography algorithm.
  */
 import java.util.stream.Stream;
+import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -23,28 +24,51 @@ import java.nio.file.Paths;
  * with a space becoming 26.
  */
 public class Driver_lab1 {
+  static final int ASCII_VALUE_OF_A = 65;
   public static void main(String[]args) {
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+    try (BufferedReader reader = new 
+         BufferedReader(new InputStreamReader(System.in))) {
       String inputLine;
-        while ((inputLine = reader.readLine()) != null) {
-          System.out.println(str2int(inputLine));
-        }
+      while ((inputLine = reader.readLine()) != null) {
+        System.out.println(Arrays.toString(str2int(inputLine)));
+      }
     } catch (IOException e) {
         e.printStackTrace();
     }
   }
 
-}
-/** 
- * str2int
- * This method takes an input String and reads each character one at 
- * a time, and then converts it into an array of integers to be returned.
- *
- * Parameters: 
- *   plaintext: the String taken from a line of input.
+  /** 
+   * str2int
+   * This method takes an input String and reads each character one at 
+   * a time, and then converts it into an array of integers to be returned.
+   * The algorithm consists of converting the character to uppercase, then
+   * converting that to an integer, then subtracting the ASCII value of 'A'.
+   * If the integer value is less than 0, it must be a space so it must be
+   * encrypted to 26.
+   *
+   * Parameters: 
+   *   plaintext: the String taken from a line of input.
+   *   encryptedArray: the integer array that will contain the encrypted text.
+   *   charToEncrypt: the current character in the string to be encrypted.
+   *   charToInt: the current character casted to int.
+   *
+   * Return value: an integer array containing the encrypted plaintext.
+   */
+  public static int[] str2int(String plaintext) {
+    int[] encryptedArray = new int[plaintext.length()];
+    for (int i = 0; i < encryptedArray.length; i++) {
+      char charToEncrypt = plaintext.charAt(i);
+      int charToInt = (int) (Character.toUpperCase(charToEncrypt));
+      // Any value below the ASCII value of A must be a space. 
+      //Therefore the encrypted value is 26.
+      if (charToInt < ASCII_VALUE_OF_A) {
+        encryptedArray[i] = 26;
+      } else {
+        encryptedArray[i] = charToInt - ASCII_VALUE_OF_A;
+      }
+    }
 
- * Return value: an integer array containing the encrypted plaintext.
- */
-public class int[] str2int(String plaintext) {
-    
+    return encryptedArray;
+  }
+
 }
