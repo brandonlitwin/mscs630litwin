@@ -44,7 +44,7 @@ public class Driver_lab1 {
   public static void main(String[]args) {
     try (BufferedReader reader = new 
          BufferedReader(new InputStreamReader(System.in))) {
-      String inputLine;
+      String inputLine = "";
       while ((inputLine = reader.readLine()) != null) {
         int[] encryptedIntArray = str2int(inputLine);
         StringBuilder encryptedString = new StringBuilder();
@@ -81,7 +81,8 @@ public class Driver_lab1 {
       char charToEncrypt = plaintext.charAt(i);
       int charToInt = (int) (Character.toUpperCase(charToEncrypt));
       // Any value below the ASCII value of A must be a space. 
-      // Therefore, the encrypted value is 26.
+      // In that case, the encrypted value is 26.
+      // All other cases must be between 'A' and 'Z'.
       if (charToInt < ASCII_VALUE_OF_A) {
         encryptedArray[i] = 26;
       } else {
