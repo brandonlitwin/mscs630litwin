@@ -30,7 +30,8 @@ public class Driver_lab2a {
    *   inputLine: The String that will contain the current line of input.
    *   currentFirstInt: The first integer of the current line of input.
    *   currentSecondInt: The second integer of the current line of input.
-   *   currentGCD: The result of the euclidAlg on the current line of input.
+   *   currentGCD: The result of the euclidAlg method on 
+   *               the current line of input.
    * 
    * Return value: A System output containing the GCD of each input line.
    */
@@ -53,7 +54,7 @@ public class Driver_lab2a {
    * euclidAlg
    * 
    * This class takes two integers and computes their greatest common
-   * divisor using the Euclidean algorithim which states:
+   * divisor using the Euclidean algorithm which states:
    * Assuming both integers a and b >= 0,
    *   k is the remainder of some integer that divides a and b.
    *   while the result of a % b > 0,
