@@ -75,8 +75,7 @@ public class Driver_lab2a {
    *               of a and b.
    */
   public static long euclidAlg(long a, long b) {
-    long gcd = 0;
-    long k = 0;
+    long gcd,k = 0;
     // switch values of a and b if b > a
     if (b > a) {
       long tempHolder = b;
