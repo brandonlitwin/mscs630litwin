@@ -39,24 +39,25 @@ public class Driver_lab2b {
    * Return value: A System output containing the GCD of each input line.
    */
   public static void main(String[]args) {
-    try (BufferedReader reader = new
-            BufferedReader(new InputStreamReader(System.in))) {
-        String inputLine = "";
-        while ((inputLine = reader.readLine()) != null) {
-            long currentFirstInt = Long.parseLong(inputLine.split(" ")[0]);
-            long currentSecondInt = Long.parseLong(inputLine.split(" ")[1]);
-            long[] currentEuclidResultArray =
-                    euclidAlgExt(currentFirstInt, currentSecondInt);
-            StringBuilder resultOutput = new StringBuilder();
-            for (int i = 0; i < currentEuclidResultArray.length; i++) {
-                resultOutput.append(currentEuclidResultArray[i] + " ");
-            }
-            System.out.println(resultOutput.toString().trim());
+    try (BufferedReader reader = new 
+         BufferedReader(new InputStreamReader(System.in))) {
+      String inputLine = "";
+      while ((inputLine = reader.readLine()) != null) {
+        long currentFirstInt = Long.parseLong(inputLine.split(" ")[0]);
+        long currentSecondInt = Long.parseLong(inputLine.split(" ")[1]);
+        long[] currentEuclidResultArray = 
+               euclidAlgExt(currentFirstInt, currentSecondInt);
+        StringBuilder resultOutput = new StringBuilder();
+        for (int i = 0; i < currentEuclidResultArray.length; i++) {
+          resultOutput.append(currentEuclidResultArray[i] + " ");
         }
+        System.out.println(resultOutput.toString().trim());
+      }
     } catch (IOException e) {
         e.printStackTrace();
     }
   }
+
   /**
    * euclidAlg
    *
@@ -93,21 +94,21 @@ public class Driver_lab2b {
     long oldY = 0;
     // switch values of a and b if b > a
     if (b > a) {
-        long tempHolder = b;
-        b = a;
-        a = tempHolder;
+      long tempHolder = b;
+      b = a;
+      a = tempHolder;
     }
     while (a > 0) {
-        long quotientFloor = Math.floorDiv(b,a);
-        long k = b % a;
-        long m = x - oldX * quotientFloor;
-        long n = y - oldY * quotientFloor;
-        b = a;
-        a = k;
-        x = oldX;
-        y = oldY;
-        oldX = m;
-        oldY = n;
+      long quotientFloor = Math.floorDiv(b,a);
+      long k = b % a;
+      long m = x - oldX * quotientFloor;
+      long n = y - oldY * quotientFloor;
+      b = a;
+      a = k;
+      x = oldX;
+      y = oldY;
+      oldX = m;
+      oldY = n;
     }
     gcd = b;
     results[0] = gcd;
