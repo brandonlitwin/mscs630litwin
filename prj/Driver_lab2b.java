@@ -76,13 +76,10 @@ public class Driver_lab2b {
    *      the second Bezout number
    *   prevX: the previous integer value of x
    *   prevY: the previous integer value of y
-   *   quotientFloor: the integer result of doing floor division of b / a
-   *   m: the current value of x - oldX * quotientFloor
-   *   n: the current value of y - oldY * quotientFloor
-   *   gcd: the integer value of the greatest common divisor of a and b.
+   *   results: the long integer array to hold the results
    *
-   * Return value: gcd, the integer value of the greatest common divisor
-   *               of a and b.
+   * Return value: results array containing the variables d, x, and y
+   *               of the equation d = ax+by.
    */
   public static long[] euclidAlgExt(long a, long b) {
     long[] results = new long[3];
@@ -90,6 +87,12 @@ public class Driver_lab2b {
     long x = 1;
     long prevY = 1;
     long y = 0;
+    if (a == b) {
+      results[0] = b;
+      results[1] = 0;
+      results[2] = 1;
+      return results;
+    }
     while (a != 0) {
       long q = Math.floorDiv(b, a);
       long temp = a;
