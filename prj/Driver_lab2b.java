@@ -68,15 +68,14 @@ public class Driver_lab2b {
    * Parameters:
    *   a: the first input integer.
    *   b: the second input integer.
-   *   tempHolder: the temporary holder of b in case a and b need to
-   *               be switched.
-   *   k: the integer that holds the result of a % b.
+   *   temp: a temporary storage for certain variable calculations.
+   *   q: the floor of the quotient of b and a.
    *   x: the integer that holds the current value of x,
    *      the first Bezout number
    *   y: the integer that holds the current value of y,
    *      the second Bezout number
-   *   oldX: the previous integer value of x
-   *   oldY: the previous integer value of y
+   *   prevX: the previous integer value of x
+   *   prevY: the previous integer value of y
    *   quotientFloor: the integer result of doing floor division of b / a
    *   m: the current value of x - oldX * quotientFloor
    *   n: the current value of y - oldY * quotientFloor
@@ -87,33 +86,26 @@ public class Driver_lab2b {
    */
   public static long[] euclidAlgExt(long a, long b) {
     long[] results = new long[3];
-    long gcd = 0;
-    long x = 0;
-    long y = 1;
-    long oldX = 1;
-    long oldY = 0;
-    // switch values of a and b if b > a
-    if (b > a) {
-      long tempHolder = b;
-      b = a;
-      a = tempHolder;
+    long prevX = 0;
+    long x = 1;
+    long prevY = 1;
+    long y = 0;
+    while (a != 0) {
+      long q = Math.floorDiv(b, a);
+      long temp = a;
+      a = b % a;
+      b = temp;
+      temp = prevY;
+      prevY = y;
+      y = temp - q * y;
+      temp = prevX;
+      prevX = x;
+      x = temp - q * x;
     }
-    while (a > 0) {
-      long quotientFloor = Math.floorDiv(b,a);
-      long k = b % a;
-      long m = x - oldX * quotientFloor;
-      long n = y - oldY * quotientFloor;
-      b = a;
-      a = k;
-      x = oldX;
-      y = oldY;
-      oldX = m;
-      oldY = n;
-    }
-    gcd = b;
-    results[0] = gcd;
-    results[1] = x;
-    results[2] = y;
+    results[0] = b;
+    results[1] = prevX;
+    results[2] = prevY;
+
     return results;
   }
 
