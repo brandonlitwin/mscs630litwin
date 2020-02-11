@@ -7,19 +7,18 @@
  * version: 1.0
  *
  * This file contains the declaration of the driver 
- * for Lab 3a's matrix determinant algorithm.
+ * for Lab 3a's matrix cofactor modular determinant algorithm.
  */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Driver_lab3a
  *
  * This class reads two integers (m and n) followed by n lines of n rows to
- * form a square matrix A. It outputs an integer representing the determinant
- * |a| of matrix A.
+ * form a square matrix A. It outputs an integer representing the cofactor 
+ * modular determinant |a| of matrix A.
  *
  */
 public class Driver_lab3a {
@@ -29,7 +28,8 @@ public class Driver_lab3a {
    * This class reads an input consisting of two integers (m and n) followed
    * by n lines of n rows to form a square matrix A. Then, it calls the
    * cofModDet method to calculate the determinant.
-   * Then, it outputs an integer representing the determinant |a| of matrix A.
+   * Then, it outputs an integer representing the cofactor 
+   * modular determinant |a| of matrix A.
    *
    * Parameters:
    *   inputLine: The String that will contain the current line of input.
@@ -56,9 +56,7 @@ public class Driver_lab3a {
         }
         rowNumber++;
       }
-      System.out.println(Arrays.deepToString(matrix));
-      int determinant = cofModDet(modulo, matrix);
-      System.out.println(determinant);
+      System.out.println(cofModDet(modulo, matrix));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -68,17 +66,50 @@ public class Driver_lab3a {
    * cofModDet
    *
    * This class takes a modulo m and a matrix A and computes the value
-   * of the determinant of A.
+   * of the cofactor modular determinant of A.
    *
    * Parameters:
-   *   m: the modulo.
+   *   m: the integer value of the modulo.
    *   A: the matrix represented as a 2D integer array.
+   *   determinant: the integer value of the determinant.
+   *   sign: the integer value of the sign used in calculations.
+   *   submatrix: a 2D integer array that holds the submatrix of the 
+   *              current matrix.
    *
-   * Return value: determinant, the integer value of the determinant of A.
+   * Return value: the integer value of the cofactor modular 
+   *               determinant of A.
    */
   public static int cofModDet(int m, int[][] A) {
     int determinant = 0;
-    return determinant;
+    int sign = 1;
+    if (A.length == 1 && A[0].length == 1) {
+      return A[0][0] % m;
+    }
+    if (A.length == 2 && A[0].length == 2) {
+      return ((A[0][0] % m) * (A[1][1] % m) - (A[1][0] % m) * (A[0][1] % m));
+    }
+    for(int i = 0; i < A.length; i++) { 
+      // values of A after removing A[i] and A[j]
+      int[][] submatrix = new int[A.length-1][A.length-1]; 
+      for(int a = 1; a < A.length; a++){
+        for(int b = 0; b < A.length; b++){
+          if(b < i) {
+            submatrix[a-1][b]=A[a][b];
+          }
+          else if(b > i){
+            submatrix[a-1][b-1]=A[a][b];
+          }
+        }
+      }
+      if(i % 2 != 0){ // odd numbered values of i in a[0][i] get a negative sign
+        sign = -1;
+      }
+      else {
+        sign = 1;
+      }
+      determinant += sign * (A[0][i]) * (cofModDet(m, submatrix));
+    }
+    return determinant % m;
   }
 
 }
