@@ -45,14 +45,14 @@ public class Driver_lab3a {
         BufferedReader(new InputStreamReader(System.in))) {
       String inputLine = "";
       inputLine = reader.readLine();
-      int modulo = Integer.parseInt(inputLine.split(" ")[0]);
-      int matrixSize = Integer.parseInt(inputLine.split(" ")[1]);
-      int[][] matrix = new int[matrixSize][matrixSize];
+      long modulo = Long.parseLong(inputLine.split(" ")[0]);
+      long matrixSize = Long.parseLong(inputLine.split(" ")[1]);
+      long[][] matrix = new long[(int) matrixSize][(int) matrixSize];
       int rowNumber = 0;
       while ((inputLine = reader.readLine()) != null) {
         // assign each row of input to the columns of the current matrix row
         for (int colNumber = 0; colNumber < matrixSize; colNumber++) {
-          matrix[rowNumber][colNumber] = Integer.parseInt(inputLine.split(" ")[colNumber]);
+          matrix[rowNumber][colNumber] = Long.parseLong(inputLine.split(" ")[colNumber]);
         }
         rowNumber++;
       }
@@ -79,37 +79,44 @@ public class Driver_lab3a {
    * Return value: the integer value of the cofactor modular 
    *               determinant of A.
    */
-  public static int cofModDet(int m, int[][] A) {
-    int determinant = 0;
-    int sign = 1;
+  public static long cofModDet(long m, long[][] A) {
+    long determinant = 0L;
+    long sign = 1L;
+    long determinantInModulo = 0L;
     if (A.length == 1 && A[0].length == 1) {
-      return A[0][0] % m;
+      determinant = A[0][0];
     }
-    if (A.length == 2 && A[0].length == 2) {
-      return ((A[0][0] % m) * (A[1][1] % m) - (A[1][0] % m) * (A[0][1] % m));
+    else if (A.length == 2 && A[0].length == 2) {
+      determinant = A[0][0]*A[1][1] - A[1][0]*A[0][1];
     }
-    for(int i = 0; i < A.length; i++) { 
-      // values of A after removing A[i] and A[j]
-      int[][] submatrix = new int[A.length-1][A.length-1]; 
-      for(int a = 1; a < A.length; a++){
-        for(int b = 0; b < A.length; b++){
-          if(b < i) {
-            submatrix[a-1][b]=A[a][b];
-          }
-          else if(b > i){
-            submatrix[a-1][b-1]=A[a][b];
+    else {
+      for(int i = 0; i < A.length; i++) { 
+        // values of A after removing A[i] and A[j]
+        long[][] submatrix = new long[A.length-1][A.length-1]; 
+        for(int a = 1; a < A.length; a++){
+          for(int b = 0; b < A.length; b++){
+            if(b < i) {
+              submatrix[a-1][b] = A[a][b] % m;
+            }
+            else if(b > i){
+              submatrix[a-1][b-1] = A[a][b] % m;
+            }
           }
         }
+        if(i % 2 != 0) { // odd numbered values of i in a[0][i] get a negative sign
+          sign = -1;
+        }
+        else {
+          sign = 1;
+        }
+        determinant += (sign * (A[0][i])) * (cofModDet(m, submatrix));
       }
-      if(i % 2 != 0){ // odd numbered values of i in a[0][i] get a negative sign
-        sign = -1;
-      }
-      else {
-        sign = 1;
-      }
-      determinant += sign * (A[0][i]) * (cofModDet(m, submatrix));
     }
-    return determinant % m;
+    
+    determinantInModulo = determinant % m;
+    if (determinantInModulo < 0)
+      determinantInModulo += m;
+    return determinantInModulo;
   }
 
 }
