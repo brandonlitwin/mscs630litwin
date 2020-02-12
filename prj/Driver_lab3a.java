@@ -37,8 +37,10 @@ public class Driver_lab3a {
    *   matrixSize: The integer value of the size of the matrix.
    *   matrix: The 2D integer array representing the matrix.
    *   determinant: The determinant of the matrix.
+   *   rowNumber: The current row of the matrix.
+   *   colNumber: The current column of the matrix.
    *
-   * Return value: A System output containing the determinant.
+   * Return value: A System output containing the determinant in modulo m.
    */
   public static void main(String[]args) {
     try (BufferedReader reader = new
@@ -52,7 +54,8 @@ public class Driver_lab3a {
       while ((inputLine = reader.readLine()) != null) {
         // assign each row of input to the columns of the current matrix row
         for (int colNumber = 0; colNumber < matrixSize; colNumber++) {
-          matrix[rowNumber][colNumber] = Long.parseLong(inputLine.split(" ")[colNumber]);
+          matrix[rowNumber][colNumber] = 
+          Long.parseLong(inputLine.split(" ")[colNumber]);
         }
         rowNumber++;
       }
@@ -75,9 +78,9 @@ public class Driver_lab3a {
    *   sign: the integer value of the sign used in calculations.
    *   submatrix: a 2D integer array that holds the submatrix of the 
    *              current matrix.
+   *   determinantInModulo: the determinant in modulo m.
    *
-   * Return value: the integer value of the cofactor modular 
-   *               determinant of A.
+   * Return value: the integer value of the determinant in modulo m.
    */
   public static long cofModDet(long m, long[][] A) {
     long determinant = 0L;
@@ -103,7 +106,8 @@ public class Driver_lab3a {
             }
           }
         }
-        if(i % 2 != 0) { // odd numbered values of i in a[0][i] get a negative sign
+        // odd numbered values of i in a[0][i] get a negative sign
+        if(i % 2 != 0) { 
           sign = -1;
         }
         else {
@@ -112,7 +116,6 @@ public class Driver_lab3a {
         determinant += (sign * (A[0][i])) * (cofModDet(m, submatrix));
       }
     }
-    
     determinantInModulo = determinant % m;
     if (determinantInModulo < 0)
       determinantInModulo += m;
