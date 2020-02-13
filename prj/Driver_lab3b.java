@@ -75,9 +75,10 @@ public class Driver_lab3b {
         for (int i = 0; i < currentResultMatrix.length; i++) {
           for (int j = 0; j < MATRIX_SIZE; j++) {
             if (j == 0) {
-              System.out.print(currentResultMatrix[i][j]);
+              System.out.print(String.format("%H", currentResultMatrix[i][j]));
             } else {
-              System.out.print(" " + currentResultMatrix[i][j]);
+              System.out.print(" " + 
+                               String.format("%H", currentResultMatrix[i][j]));
             }
           }
           System.out.println(" ");
