@@ -42,6 +42,15 @@ public class Driver_lab3b {
    *   substitutionChar: The first line of input containing the substitution 
    *                     character used for padding the matrix.
    *   plaintext: The second line of input containing the text to encrypt.
+   *   plaintextLength: The number of characters in plaintext.
+   *   numberOfMatrices: The number of matrices required in the output.
+   *   currentStringBeginIndex: The beginning index of the current 16 character
+   *                            substring of plaintext.
+   *   currentStringEndIndex: The last index of the current 16 character
+   *                            substring of plaintext.
+   *   currentResultMatrix: The current 4x4 matrix to hold the current substring
+   *                        of plaintext's encryption.
+   *   currentString: The current 16 character substring of plaintext.
    *
    *
    * Return value: A System output containing the fully encrypted text
@@ -52,9 +61,15 @@ public class Driver_lab3b {
         BufferedReader(new InputStreamReader(System.in))) {
       char substitutionChar = reader.readLine().charAt(0);
       String plaintext = reader.readLine();
-      int plaintextLength = plaintext.length();
+      int plaintextLength = 0;
+      if (plaintext != null) {
+        plaintextLength = plaintext.length();
+      }
       int numberOfMatrices = (int) Math.ceil(((double) plaintextLength / 
                                               (double) MATRIX_LENGTH));
+      if (plaintext == null) {
+        numberOfMatrices = 1;
+      }
       int currentStringBeginIndex = 0;
       int currentStringEndIndex = currentStringBeginIndex + MATRIX_LENGTH;
       int[][] currentResultMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
@@ -64,12 +79,15 @@ public class Driver_lab3b {
           System.out.println(" ");
         }
         String currentString = "";
-        if (plaintextLength - currentStringBeginIndex > MATRIX_LENGTH) {
-          currentString = plaintext.substring(currentStringBeginIndex,
-                                              currentStringEndIndex);
-        } else {
-          currentString = plaintext.substring(currentStringBeginIndex);
+        if (plaintext != null) {
+          if (plaintextLength - currentStringBeginIndex > MATRIX_LENGTH) {
+            currentString = plaintext.substring(currentStringBeginIndex,
+                                                currentStringEndIndex);
+          } else {
+            currentString = plaintext.substring(currentStringBeginIndex);
+          }
         }
+        
         currentResultMatrix = getHexMatP(substitutionChar, currentString);
         // print the current matrix
         for (int i = 0; i < currentResultMatrix.length; i++) {
@@ -101,10 +119,14 @@ public class Driver_lab3b {
    * fill it up to 4x4.
    *
    * Parameters:
-   *   s: the substitution character used for padding the matrix.
-   *   p: the full plaintext string to encrypt into the matrix.
+   *   s: The substitution character used for padding the matrix.
+   *   p: The full plaintext string to encrypt into the matrix.
+   *   row: The current row of the matrix that is being built.
+   *   col: The current column of the matrix that is being built.
+   *   currentMatrixPosition: The current index of the matrix.
+   *   currentChar: The current character at the current index of the matrix.
    *
-   * Return value: the matrix of encrypted text as a 2D 4x4 array.
+   * Return value: The matrix of encrypted text as a 2D 4x4 array.
    */
   public static int[][] getHexMatP(char s, String p) {
     int[][] matrix = new int[MATRIX_SIZE][MATRIX_SIZE];
@@ -112,9 +134,12 @@ public class Driver_lab3b {
       for (int col = 0; col < MATRIX_SIZE; col++) {
         int currentMatrixPosition = row + (MATRIX_SIZE * col);
         char currentChar = s;
-        if (currentMatrixPosition < p.length()) {
-          currentChar = p.charAt(currentMatrixPosition);
-        } 
+        if (p != null) {
+          if (currentMatrixPosition < p.length()) {
+            currentChar = p.charAt(currentMatrixPosition);
+          } 
+        }
+        
         matrix[row][col] = currentChar; 
       }
     }
