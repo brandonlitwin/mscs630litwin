@@ -70,6 +70,9 @@ public class Driver_lab3b {
       if (plaintext == null) {
         numberOfMatrices = 1;
       }
+      if (plaintextLength % 16 == 0) {
+        numberOfMatrices++;
+      }
       int currentStringBeginIndex = 0;
       int currentStringEndIndex = currentStringBeginIndex + MATRIX_LENGTH;
       int[][] currentResultMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
