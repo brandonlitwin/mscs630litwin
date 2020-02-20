@@ -12,5 +12,16 @@
  * AESCipher
  */
 public class AESCipher {
+  /**
+   * 
+   * Parameters:
+   *   keyHex: The input system key, a 16 uppercase char String
+   * 
+   * Return value: a String array containing the 11 round keys
+   */
+  public static String[] aesRoundKeys(String keyHex) {
+    return null;
+
+  }
 
 }
