@@ -12,6 +12,9 @@
  * AESCipher
  */
 public class AESCipher {
+   // Number of rows and columns in the square matrix.
+  public static final int MATRIX_SIZE = 4;
+  public static final int W_MATRIX_COLS = 44;
   // The sbox values
   public static final int[][] sbox = {
     {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b,
@@ -70,6 +73,9 @@ public class AESCipher {
      0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
      0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
      0x74, 0xe8, 0xcb};
+  public static void main(String[] args) {
+    System.out.println(aesRoundKeys("12345678901234561234567890123456"));
+  }
   /**
    * 
    * Parameters:
@@ -78,6 +84,34 @@ public class AESCipher {
    * Return value: a String array containing the 11 round keys
    */
   public static String[] aesRoundKeys(String keyHex) {
+    int [][] keyHexMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
+    int [][] wMatrix = new int[MATRIX_SIZE][W_MATRIX_COLS];
+    int substringVal = 0;
+    // Convert the keyHex into a matrix containing long representations of each
+    // hex value
+    for (int row = 0; row < MATRIX_SIZE; row++) {
+      for (int col = 0; col < MATRIX_SIZE; col++) {
+        keyHexMatrix[col][row] = Integer.parseInt(keyHex.substring(
+                                 substringVal, substringVal + 2), 16);
+        substringVal += 2;
+      }
+    }
+    // The main loop to construct w
+    for (int row = 0; row < W_MATRIX_COLS; row++) {
+      for (int col = 0; col < MATRIX_SIZE; col++) {
+        if (row < 4) {
+          wMatrix[col][row] = keyHexMatrix[col][row];
+        }
+      }
+    }
+    // Just for test
+    for (int i = 0; i < MATRIX_SIZE; i++) {
+      for (int j = 0; j < MATRIX_SIZE; j++) {
+        System.out.print(wMatrix[i][j] + " ");
+      }
+      System.out.println("");
+    }
+    
     return null;
 
   }
