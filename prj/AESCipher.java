@@ -84,29 +84,44 @@ public class AESCipher {
    * Return value: a String array containing the 11 round keys
    */
   public static String[] aesRoundKeys(String keyHex) {
-    int [][] keyHexMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
-    int [][] wMatrix = new int[MATRIX_SIZE][W_MATRIX_COLS];
+    String [][] keyHexMatrix = new String[MATRIX_SIZE][MATRIX_SIZE];
+    String [][] wMatrix = new String[MATRIX_SIZE][W_MATRIX_COLS];
     int substringVal = 0;
     // Convert the keyHex into a matrix containing long representations of each
     // hex value
     for (int row = 0; row < MATRIX_SIZE; row++) {
       for (int col = 0; col < MATRIX_SIZE; col++) {
-        keyHexMatrix[col][row] = Integer.parseInt(keyHex.substring(
-                                 substringVal, substringVal + 2), 16);
+        //keyHexMatrix[col][row] = Integer.parseInt(keyHex.substring(
+        //                         substringVal, substringVal + 2), 16);
+        keyHexMatrix[col][row] = 
+        Integer.toHexString(Integer.parseInt(
+                            keyHex.substring(substringVal, substringVal + 2),
+                                            16));
         substringVal += 2;
       }
     }
     // The main loop to construct w
-    for (int row = 0; row < W_MATRIX_COLS; row++) {
-      for (int col = 0; col < MATRIX_SIZE; col++) {
-        if (row < 4) {
-          wMatrix[col][row] = keyHexMatrix[col][row];
+    for (int col = 0; col < W_MATRIX_COLS; col++) {
+      for (int row = 0; row < MATRIX_SIZE; row++) {
+        // Make the first 4 cols of w the same as k
+        if (col < 4) {
+          wMatrix[row][col] = keyHexMatrix[row][col];
+        } else {
+          if (col % 4 == 0) {
+            // Do XOR
+            wMatrix[row][col] = Integer.toHexString(
+                                Integer.parseInt(wMatrix[row][col-4], 16) ^ 
+                                Integer.parseInt(wMatrix[row][col-1], 16));
+          } else {
+            wMatrix[row][col] = "0";
+          }
+
         }
       }
     }
     // Just for test
     for (int i = 0; i < MATRIX_SIZE; i++) {
-      for (int j = 0; j < MATRIX_SIZE; j++) {
+      for (int j = 0; j < W_MATRIX_COLS; j++) {
         System.out.print(wMatrix[i][j] + " ");
       }
       System.out.println("");
