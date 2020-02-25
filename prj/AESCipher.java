@@ -73,9 +73,6 @@ public class AESCipher {
      0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
      0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
      0x74, 0xe8, 0xcb};
-  public static void main(String[] args) {
-    System.out.println(aesRoundKeys("12345678901234561234567890123456"));
-  }
   /**
    * 
    * Parameters:
@@ -86,13 +83,13 @@ public class AESCipher {
   public static String[] aesRoundKeys(String keyHex) {
     String [][] keyHexMatrix = new String[MATRIX_SIZE][MATRIX_SIZE];
     String [][] wMatrix = new String[MATRIX_SIZE][W_MATRIX_COLS];
+    String [] roundKeys = new String[11];
     int substringVal = 0;
-    // Convert the keyHex into a matrix containing long representations of each
-    // hex value
+    int round = 0;
+    String roundKey = "";
+    // Convert the keyHex into a matrix containing each hex value
     for (int row = 0; row < MATRIX_SIZE; row++) {
       for (int col = 0; col < MATRIX_SIZE; col++) {
-        //keyHexMatrix[col][row] = Integer.parseInt(keyHex.substring(
-        //                         substringVal, substringVal + 2), 16);
         keyHexMatrix[col][row] = 
         Integer.toHexString(Integer.parseInt(
                             keyHex.substring(substringVal, substringVal + 2),
@@ -106,28 +103,43 @@ public class AESCipher {
         // Make the first 4 cols of w the same as k
         if (col < 4) {
           wMatrix[row][col] = keyHexMatrix[row][col];
+          roundKey += wMatrix[row][col];
         } else {
           if (col % 4 != 0) {
             // Do XOR
             wMatrix[row][col] = Integer.toHexString(
                                 Integer.parseInt(wMatrix[row][col-4], 16) ^ 
                                 Integer.parseInt(wMatrix[row][col-1], 16));
+            //Put a 0 in front of hex results that are single digit
+            if (wMatrix[row][col].length() == 1) {
+              wMatrix[row][col] = "0" + wMatrix[row][col];
+            }
+            roundKey += wMatrix[row][col];
           } else {
-            wMatrix[row][col] = "0";
+            if (row == 0) { 
+              roundKeys[round] = roundKey;
+              roundKey = "";
+              round++;
+            }
+            wMatrix[row][col] = "AA";
+            roundKey += wMatrix[row][col];
+            
           }
 
         }
       }
     }
+    // Store the last round key
+    roundKeys[round] = roundKey;
     // Just for test
-    for (int i = 0; i < MATRIX_SIZE; i++) {
+    /*for (int i = 0; i < MATRIX_SIZE; i++) {
       for (int j = 0; j < W_MATRIX_COLS; j++) {
         System.out.print(wMatrix[i][j] + " ");
       }
       System.out.println("");
     }
-    
-    return null;
+    System.out.println(roundKeys.length);*/
+    return roundKeys;
 
   }
   /**
