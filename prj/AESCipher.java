@@ -107,7 +107,7 @@ public class AESCipher {
         if (col < 4) {
           wMatrix[row][col] = keyHexMatrix[row][col];
         } else {
-          if (col % 4 == 0) {
+          if (col % 4 != 0) {
             // Do XOR
             wMatrix[row][col] = Integer.toHexString(
                                 Integer.parseInt(wMatrix[row][col-4], 16) ^ 
