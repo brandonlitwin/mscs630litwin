@@ -77,8 +77,21 @@ public class AESCipher {
    * 
    * Parameters:
    *   keyHex: The input system key, a 16 uppercase char String
+   *   keyHexMatrix: The keyHex converted into a 4x4 matrix
+   *   wMatrix: The 4x44 matrix for w, which is needed for encryption
+   *   substringVal: The current placeholder for the substring of the keyHex
+   *   round: The round number
+   *   roundKey: The key of this round to add to roundKeys
+   *   col: The current col of the matrix that is being operated on
+   *   row: The current row of the matrix that is being operated on
+   *   wNew: A String array containing the col to add to wMatrix, which is the
+   *         result of getting the s-box value on the left-shifted original 
+   *         value of that position in wMatrix
+   *   rCon: The round constant from the aesRcon method
+   *   wMatrixToHex: A String array containing the wMatrix vals converted to 
+   *                 hex
    * 
-   * Return value: a String array containing the 11 round keys
+   * Return value: roundKeys, a String array containing the 11 round keys
    */
   public static String[] aesRoundKeys(String keyHex) {
     int [][] keyHexMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
@@ -101,12 +114,20 @@ public class AESCipher {
         // Make the first 4 cols of w the same as k
         if (col < 4) {
           wMatrix[row][col] = keyHexMatrix[row][col];
-          roundKey += Integer.toHexString(wMatrix[row][col]);
+          if (Integer.toHexString(wMatrix[row][col]).length() == 1) {
+            roundKey += "0" + Integer.toHexString(wMatrix[row][col]);
+          } else {
+            roundKey += Integer.toHexString(wMatrix[row][col]);
+          }
         } else {
           if (col % 4 != 0) {
             // Do XOR
             wMatrix[row][col] = wMatrix[row][col-4] ^ wMatrix[row][col-1];
-            roundKey += Integer.toHexString(wMatrix[row][col]);
+            if (Integer.toHexString(wMatrix[row][col]).length() == 1) {
+              roundKey += "0" + Integer.toHexString(wMatrix[row][col]);
+            } else {
+              roundKey += Integer.toHexString(wMatrix[row][col]);
+            }
           } else {
             if (row == 0) {
               // new round is starting so add the current roundKey to the final
@@ -123,19 +144,34 @@ public class AESCipher {
               int rCon = aesRcon(round);
               // XOR with the round constant
               wNew[0] = rCon ^ wNew[0];
-              wNew[1] = rCon ^ wNew[1];
-              wNew[2] = rCon ^ wNew[2];
-              wNew[3] = rCon ^ wNew[3];
               // final XOR
               wMatrix[0][col] = wMatrix[0][col-4] ^ wNew[0];
               wMatrix[1][col] = wMatrix[1][col-4] ^ wNew[1];
               wMatrix[2][col] = wMatrix[2][col-4] ^ wNew[2];
               wMatrix[3][col] = wMatrix[3][col-4] ^ wNew[3];
+              String[] wMatrixToHex = new String[4];
+              wMatrixToHex[0] = Integer.toHexString(wMatrix[0][col]);
+              wMatrixToHex[1] = Integer.toHexString(wMatrix[1][col]);
+              wMatrixToHex[2] = Integer.toHexString(wMatrix[2][col]);
+              wMatrixToHex[3] = Integer.toHexString(wMatrix[3][col]);
+              // pad the single digit hex values with a leading 0
+              //System.out.println(wMatrixToHex[0].length() + "," + wMatrixToHex[0]);
+              if (wMatrixToHex[0].length() == 1) {
+                wMatrixToHex[0] = "0" + wMatrixToHex[0];
+              }
+              if (wMatrixToHex[1].length() == 1) {
+                wMatrixToHex[1] = "0" + wMatrixToHex[1];
+              }
+              if (wMatrixToHex[2].length() == 1) {
+                wMatrixToHex[2] = "0" + wMatrixToHex[2];
+              }
+              if (wMatrixToHex[3].length() == 1) {
+                wMatrixToHex[3] = "0" + wMatrixToHex[3];
+              }
+              
               // add new column of vals to roundKey
-              roundKey = roundKey + Integer.toHexString(wMatrix[0][col]) + 
-                         Integer.toHexString(wMatrix[1][col]) + 
-                         Integer.toHexString(wMatrix[2][col]) + 
-                         Integer.toHexString(wMatrix[3][col]);
+              roundKey = roundKey + wMatrixToHex[0] + wMatrixToHex[1] + 
+                         wMatrixToHex[2] + wMatrixToHex[3]; 
 
             }
            
@@ -154,8 +190,11 @@ public class AESCipher {
    * 
    * Parameters:
    *   inHex: The input hex code as a String
+   *   inHexToString: The HexString representation of the input integer
+   *   sBoxRow: The row to lookup in the s-box table
+   *   sBoxCol: The col to lookup in the s-box table
    * 
-   * Return value: outHex, the output hex code
+   * Return value: the output hex code from the s-box table
    */
   public static int aesSBox(int inHex) {
     // split inHex into its two hex values
