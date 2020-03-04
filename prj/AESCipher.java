@@ -1,15 +1,26 @@
 /**
- * file: Driver_lab4.java
+ * file: AESCipher.java
  * author: Brandon Litwin
  * course: MSCS 630
- * assignment: Lab 4
- * due date: 3/1/2020
- * version: 1.0
+ * assignment: Lab 5
+ * due date: 3/15/2020
+ * version: 1.1
  *
- * This file contains the AESCipher class which is called by Driver_lab4.
+ * This file contains the AESCipher class which is called by Driver_lab5.
  */
 /**
  * AESCipher
+ * 
+ * This class contains a cipher that will encrypt a plaintext according to AES.
+ * It contains the following methods:
+ *   aesRoundKeys
+ *   AES
+ *   aesSBox
+ *   aesRcon
+ *   AESStateXOR
+ *   AESNibbleSub
+ *   AESShiftRow
+ *   AESMixColumn
  */
 public class AESCipher {
    // Number of rows and columns in the square matrix.
@@ -74,6 +85,11 @@ public class AESCipher {
      0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
      0x74, 0xe8, 0xcb};
   /**
+   * aesRoundKeys
+   * 
+   * This method reads a system key hex and follows the algorithm to generate
+   * round keys for 11 rounds.
+   * 
    * 
    * Parameters:
    *   keyHex: The input system key, a 16 uppercase char String
@@ -155,7 +171,6 @@ public class AESCipher {
               wMatrixToHex[2] = Integer.toHexString(wMatrix[2][col]);
               wMatrixToHex[3] = Integer.toHexString(wMatrix[3][col]);
               // pad the single digit hex values with a leading 0
-              //System.out.println(wMatrixToHex[0].length() + "," + wMatrixToHex[0]);
               if (wMatrixToHex[0].length() == 1) {
                 wMatrixToHex[0] = "0" + wMatrixToHex[0];
               }
@@ -187,6 +202,10 @@ public class AESCipher {
 
   }
   /**
+   * aesSBox
+   * 
+   * This method will retrieve the S-box substitution value for the given
+   * hex value.
    * 
    * Parameters:
    *   inHex: The input hex code as a String
@@ -203,11 +222,17 @@ public class AESCipher {
     if (inHexToString.length() == 1) {
       inHexToString = "0"+inHexToString;
     }
-    int sBoxRow = Integer.parseInt(String.valueOf(inHexToString.charAt(0)), 16);
-    int sBoxCol = Integer.parseInt(String.valueOf(inHexToString.charAt(1)), 16);
+    int sBoxRow = Integer.parseInt(String.valueOf(
+                                   inHexToString.charAt(0)), 16);
+    int sBoxCol = Integer.parseInt(String.valueOf(
+                                   inHexToString.charAt(1)), 16);
     return sbox[sBoxRow][sBoxCol];
   }
   /**
+   * aesRcon
+   * 
+   * This method will retrieve the round constant from the rcon table
+   * (which is an int array) for the given round number.
    * 
    * Parameters:
    *   round: The round number
@@ -216,6 +241,80 @@ public class AESCipher {
    */
   public static int aesRcon(int round) {
     return rcon[round];
+  }
+  /**
+   * AES
+   * 
+   * This method produces a ciphertext from a given plaintext and system key
+   * using the AES algorithm.
+   * 
+   * Parameters:
+   *   pTextHex: The plaintext String, which can be converted to hex
+   *   keyHex: The system key as a hex String
+   * 
+   * Return value: a String containing the resulting ciphertext
+   */
+  public static String AES(String pTextHex, String keyHex) {
+	  return null;
+  }
+  /**
+   * AESStateXOR
+   * 
+   * This method performs an XOR operation on two given 4x4 matrices and 
+   * returns a 4x4 matrix.
+   * 
+   * Parameters:
+   *   sHex: A 4x4 matrix containing the current hex 
+   *   keyHex: A 4x4 matrix containing the current round key hex
+   * 
+   * Return value: an array containing the resulting 4x4 matrix 
+   * 
+   */
+  public static String[] AESStateXOR(String[] sHex, String[] keyHex) {
+    return null;
+  }
+  /**
+   * AESNibbleSub
+   * 
+   * This method calls the aesSBox method to perform substitution on the given
+   * hex matrix.
+   * 
+   * Parameters:
+   *   inStateHex: A 4x4 matrix containing the current hex
+   * 
+   * Return value: an array containing the resulting 4x4 matrix 
+   * 
+   */
+  public static String[] AESNibbleSub(String[] inStateHex) {
+    return null;
+  }
+  /**
+   * AESShiftRow
+   * 
+   * This method performs the row shift step of the AES algorithm for the given
+   * hex matrix
+   * 
+   * Parameters:
+   *   inStateHex: A 4x4 matrix containing the current hex
+   * 
+   * Return value: an array containing the resulting 4x4 matrix 
+   */
+  public static String[] AESShiftRow(String[] inStateHex) {
+    return null;
+  }
+  /**
+   * AESMixColumn
+   * 
+   * This method performs the mix column step of the AES algorithm for the given
+   * hex matrix
+   * 
+   * Parameters:
+   *   inStateHex: A 4x4 matrix containing the current hex
+   * 
+   * Return value: an array containing the resulting 4x4 matrix 
+   */
+  public static String[] AESMixColumn(String[] inStateHex) {
+    return null;
   }
 
 }
