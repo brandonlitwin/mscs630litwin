@@ -261,6 +261,7 @@ public class AESCipher {
     int[][] nibbleSubstitutionKey = null;
     for (int i = 0; i < roundKeys.length; i++) {
       XORRoundKey = AESStateXOR(pTextHex, roundKeys[i]);
+      nibbleSubstitutionKey = AESNibbleSub(XORRoundKey);
       /*System.out.println("XORRoundKey");
       for (int k = 0; k < XORRoundKey.length; k++) {
         for (int j = 0; j < XORRoundKey.length; j++) {
@@ -269,14 +270,13 @@ public class AESCipher {
         System.out.println();
       }*/
     }
-
     // Convert final hex matrix to String
-    for (int i = 0; i < XORRoundKey.length; i++) {
-      for (int j = 0; j < XORRoundKey.length; j++) {
-        if (Integer.toHexString(XORRoundKey[i][j]).length() == 1) {
-          cipherText += "0" + Integer.toHexString(XORRoundKey[i][j]);
+    for (int i = 0; i < nibbleSubstitutionKey.length; i++) {
+      for (int j = 0; j < nibbleSubstitutionKey.length; j++) {
+        if (Integer.toHexString(nibbleSubstitutionKey[i][j]).length() == 1) {
+          cipherText += "0" + Integer.toHexString(nibbleSubstitutionKey[i][j]);
         } else {
-          cipherText += Integer.toHexString(XORRoundKey[i][j]);
+          cipherText += Integer.toHexString(nibbleSubstitutionKey[i][j]);
         }
       }
     }
@@ -328,8 +328,18 @@ public class AESCipher {
    * Return value: an array containing the resulting 4x4 matrix 
    * 
    */
-  public static String[] AESNibbleSub(String[] inStateHex) {
-    return null;
+  public static int[][] AESNibbleSub(int[][] inStateHex) {
+    int[][] nibbleSubMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
+    for (int i = 0; i < inStateHex.length; i++) {
+      for (int j = 0; j < inStateHex.length; j++) {
+        //System.out.print(inStateHex[i][j] + " ");
+        nibbleSubMatrix[i][j] = aesSBox(inStateHex[i][j]);
+        //System.out.print(Integer.toHexString(nibbleSubMatrix[i][j]));
+        //System.out.println();
+      }
+
+    }
+    return nibbleSubMatrix;
   }
   /**
    * AESShiftRow
