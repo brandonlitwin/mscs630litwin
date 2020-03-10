@@ -20,7 +20,7 @@ import java.io.IOException;
  * This class reads 2 line of input, the system key and plaintext.
  *
  */
-public class Driver_lab5 {                       
+public class Driver_lab5 {                   
   /**
    * main
    *
@@ -32,14 +32,16 @@ public class Driver_lab5 {
    *   keyHex: The input system key, a 128 bit String of 32 chars
    *   plaintext: The input plaintext
    *
-   * Return value: A System output containing the result ciphertext.
+   * Return value: A System output containing the result ciphertext, 
+   *               cTextHex.
    */
   public static void main(String[]args) {
     try (BufferedReader reader = new
         BufferedReader(new InputStreamReader(System.in))) {
           String keyHex = reader.readLine().toUpperCase();
           String plaintext = reader.readLine().toUpperCase();
-          System.out.println(AESCipher.AES(keyHex, plaintext));
+          String cTextHex = AESCipher.AES(plaintext, keyHex);
+          System.out.println(cTextHex);
       
     } catch (IOException e) {
       e.printStackTrace();

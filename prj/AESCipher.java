@@ -255,23 +255,66 @@ public class AESCipher {
    * Return value: a String containing the resulting ciphertext
    */
   public static String AES(String pTextHex, String keyHex) {
-	  return null;
+    String[] roundKeys = aesRoundKeys(keyHex);
+    String cipherText = "";
+    int[][] XORRoundKey = null;
+    int[][] nibbleSubstitutionKey = null;
+    for (int i = 0; i < roundKeys.length; i++) {
+      XORRoundKey = AESStateXOR(pTextHex, roundKeys[i]);
+      /*System.out.println("XORRoundKey");
+      for (int k = 0; k < XORRoundKey.length; k++) {
+        for (int j = 0; j < XORRoundKey.length; j++) {
+          System.out.print(XORRoundKey[k][j] + "");
+        }
+        System.out.println();
+      }*/
+    }
+
+    // Convert final hex matrix to String
+    for (int i = 0; i < XORRoundKey.length; i++) {
+      for (int j = 0; j < XORRoundKey.length; j++) {
+        if (Integer.toHexString(XORRoundKey[i][j]).length() == 1) {
+          cipherText += "0" + Integer.toHexString(XORRoundKey[i][j]);
+        } else {
+          cipherText += Integer.toHexString(XORRoundKey[i][j]);
+        }
+      }
+    }
+    
+	  return cipherText.trim().toUpperCase();
   }
   /**
    * AESStateXOR
    * 
-   * This method performs an XOR operation on two given 4x4 matrices and 
+   * This method performs an XOR operation on two given Strings and 
    * returns a 4x4 matrix.
    * 
    * Parameters:
-   *   sHex: A 4x4 matrix containing the current hex 
-   *   keyHex: A 4x4 matrix containing the current round key hex
+   *   sHex: A String containing the plaintext hex 
+   *   keyHex: A String containing the current round key hex
    * 
    * Return value: an array containing the resulting 4x4 matrix 
    * 
    */
-  public static String[] AESStateXOR(String[] sHex, String[] keyHex) {
-    return null;
+  public static int[][] AESStateXOR(String sHex, String keyHex) {
+    int substringVal = 0;
+    int[][] XORMatrix = new int[MATRIX_SIZE][MATRIX_SIZE];
+    // Convert keyHex to matrix
+    //System.out.println("Plaintext");
+    for (int i = 0; i < MATRIX_SIZE; i++) {
+      for (int j = 0; j < MATRIX_SIZE; j++) {
+        //System.out.print(sHex.substring(substringVal, 
+        //substringVal+2) + " ");
+        XORMatrix[j][i] = Integer.parseInt(sHex.substring(substringVal, 
+                                                   substringVal+2), 16) ^ 
+                          Integer.parseInt(keyHex.substring(substringVal,
+                                                    substringVal+2), 16);
+        substringVal += 2;
+        //System.out.print(Integer.toHexString(XORMatrix[j][i]).toUpperCase());
+        //System.out.println();
+      }
+    }
+    return XORMatrix;
   }
   /**
    * AESNibbleSub
