@@ -40,7 +40,7 @@ public class Driver_lab5 {
         BufferedReader(new InputStreamReader(System.in))) {
           String keyHex = reader.readLine().toUpperCase();
           String plaintext = reader.readLine().toUpperCase();
-          String cTextHex = AESCipher.AES(plaintext, keyHex);
+          String cTextHex = AEScipher.AES(plaintext, keyHex);
           System.out.println(cTextHex);
       
     } catch (IOException e) {
