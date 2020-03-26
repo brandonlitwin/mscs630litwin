@@ -2,3 +2,5 @@ venv/
 .flaskenv
 *.vscode/
 *__pycache__/
+*.idea/
+panpan.db
