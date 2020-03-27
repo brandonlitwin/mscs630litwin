@@ -5,3 +5,4 @@ Flask-SQLAlchemy==2.4.0
 Flask-WTF==0.14.2
 python-dotenv==0.10.3
 werkzeug==0.16.1
+flask_bootstrap==3.3.7.1
