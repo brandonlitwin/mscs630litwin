@@ -1,25 +1,42 @@
 {%- block styles %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='css/hack.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='css/solarized-dark.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/dark-grey.css')}}">
 
 {%- endblock styles %}
 {% block title %}
-<h1 style="float: left;">Pass a Note, Peek a Note</h1><br><br><br>
+<h1 style="float: left;">Pass a Note, Peek a Note</h1><br><br><br><br>
 {% endblock %}
-<body class="hack solarized-dark">{% block body_attribs %}{% endblock body_attribs %}
+<body class="hack dark-grey">{% block body_attribs %}{% endblock body_attribs %}
 {% block body -%}
 
 {% block navbar %}
-<ul style="float: left;">
-    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+<div class="menu" style="float:left; width:20%;">
+    <a class="menu-item" href="{{ url_for('main.index') }}">Home 
+        <div class="pull-right">»</div>
+    </a>
     {% if current_user.is_anonymous %}
-    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+    <a class="menu-item" href="{{ url_for('auth.login') }}">Login
+        <div class="pull-right">»</div>
+    </a>
     {% else %}
-    <li><a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a></li>
-    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+    <a class="menu-item" href="{{ url_for('main.messages') }}">Messages
+        <div class="pull-right">»</div>
+        {% set new_messages = current_user.new_messages() %}
+        {% if new_messages %}
+        <span class="badge">
+            {{ new_messages }}
+        </span>
+        {% endif %}
+    </a>
+    <a class="menu-item" href="{{ url_for('main.user', username=current_user.username) }}">Profile
+        <div class="pull-right">»</div> 
+    </a>
+    <a class="menu-item" href="{{ url_for('auth.logout') }}">Logout
+        <div class="pull-right">»</div>
+    </a>
     {% endif %}
-</ul>
+</div>
 {% endblock %}
 
 {% block content %}
