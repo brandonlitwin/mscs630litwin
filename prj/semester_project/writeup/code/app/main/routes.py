@@ -48,10 +48,11 @@ def send_message(recipient):
     if form.validate_on_submit():
         from Crypto.Cipher import AES
         import os
+        import base64
         key = os.urandom(16)
         obj = AES.new(key, AES.MODE_CBC, 'This is an IV123')
         msg = Message(sender=current_user, recipient=user,
-                      body=form.message.data, encrypted=obj.encrypt(form.message.data), key=key)
+                      body=form.message.data, encrypted=base64.b64encode(obj.encrypt(form.message.data)), key=key)
         db.session.add(msg)
         db.session.commit()
         flash('Your message has been sent.')
