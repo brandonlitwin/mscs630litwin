@@ -20,7 +20,7 @@
               {% endset %}
               From: {{message.sender.username}} at {{message.timestamp}}
               <br><br>
-              <span id="message{{ message.id }}">{{ message.body }}</span>
+              <span id="message{{ message.id }}">{{ message.encrypted }}</span>
           </td>
       </tr>
   </table>

@@ -46,8 +46,12 @@ def send_message(recipient):
     user = User.query.filter_by(username=recipient).first_or_404()
     form = MessageForm()
     if form.validate_on_submit():
+        from Crypto.Cipher import AES
+        import os
+        key = os.urandom(16)
+        obj = AES.new(key, AES.MODE_CBC, 'This is an IV123')
         msg = Message(sender=current_user, recipient=user,
-                      body=form.message.data)
+                      body=form.message.data, encrypted=obj.encrypt(form.message.data), key=key)
         db.session.add(msg)
         db.session.commit()
         flash('Your message has been sent.')
