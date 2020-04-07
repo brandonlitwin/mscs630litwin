@@ -20,15 +20,26 @@
               {% endset %}
               From: {{message.sender.username}} at {{message.timestamp}}
               <br><br>
-              <span id="message{{ message.id }}encrypted">{{ message.encrypted }}</span>
+              <span id="message{{ message.id }}encrypted">Ciphertext: {{ message.encrypted }}</span>
 
               {% if message.recipient_id == current_user.id %}
               <br><br><span id="message{{ message.id }}key">Key: {{ message.key }}</span>
-              <br><br><span id="message{{ message.id }}key">Decrypted: {{ message.body }}</span>
+              <br><br><span id="message{{ message.id }}decrypted" style="display: none;">Decrypted: {{ message.body }}</span><br><br>
               {% endif %}
+              <button id="message{{ message.id }}decryptbutton" onclick='showDecryption("message{{ message.id }}decrypted")'>Decrypt</button>
           </td>
       </tr>
   </table>
+  <script>
+    function showDecryption(decryptMessageID) {
+        var x = document.getElementById(decryptMessageID);
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+    }
+</script>
     {% endfor %}
     <nav aria-label="...">
         <ul class="pager">
