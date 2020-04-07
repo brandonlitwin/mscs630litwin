@@ -6,3 +6,4 @@ Flask-WTF==0.14.2
 python-dotenv==0.10.3
 werkzeug==0.16.1
 flask_bootstrap==3.3.7.1
+pycryptodome==3.9.7

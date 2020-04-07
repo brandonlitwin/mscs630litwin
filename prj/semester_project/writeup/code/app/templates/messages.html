@@ -20,10 +20,11 @@
               {% endset %}
               From: {{message.sender.username}} at {{message.timestamp}}
               <br><br>
-              <span id="message{{ message.id }}">{{ message.encrypted }}</span>
+              <span id="message{{ message.id }}encrypted">{{ message.encrypted }}</span>
 
               {% if message.recipient_id == current_user.id %}
               <br><br><span id="message{{ message.id }}key">Key: {{ message.key }}</span>
+              <br><br><span id="message{{ message.id }}key">Decrypted: {{ message.body }}</span>
               {% endif %}
           </td>
       </tr>

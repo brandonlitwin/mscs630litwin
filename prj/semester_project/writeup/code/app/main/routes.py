@@ -47,12 +47,19 @@ def send_message(recipient):
     form = MessageForm()
     if form.validate_on_submit():
         from Crypto.Cipher import AES
-        import os
-        import base64
-        key = os.urandom(16)
-        obj = AES.new(key, AES.MODE_CBC, 'This is an IV123')
+        from Crypto.Random import get_random_bytes
+        from base64 import b64encode, b64decode
+        key = get_random_bytes(16)
+        AES_encryption_cipher = AES.new(key, AES.MODE_CFB)
+        ciphertext = AES_encryption_cipher.encrypt(form.message.data.encode("utf-8"))
+        iv = b64encode(AES_encryption_cipher.iv).decode("utf-8")
+        ct = b64encode(ciphertext).decode('utf-8')
+        iv = b64decode(iv)
+        ct = b64decode(ct)
+        AES_decryption_cipher = AES.new(key, AES.MODE_CFB, iv=iv)
+        plaintext = AES_decryption_cipher.decrypt(ct)
         msg = Message(sender=current_user, recipient=user,
-                      body=form.message.data, encrypted=base64.b64encode(obj.encrypt(form.message.data)), key=key)
+                      body=plaintext.decode("utf-8"), encrypted=b64encode(ct).decode("utf-8"), key=b64encode(key).decode("utf-8"))
         db.session.add(msg)
         db.session.commit()
         flash('Your message has been sent.')
