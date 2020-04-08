@@ -81,3 +81,10 @@ def messages():
         if messages.has_prev else None
     return render_template('messages.html', messages=messages.items,
                            next_url=next_url, prev_url=prev_url)
+
+@bp.route('/users')
+@login_required
+def users():
+    page = request.args.get('page', 1, type=int)
+    users = User.query.all()
+    return render_template('users.html', users=users)

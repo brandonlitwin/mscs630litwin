@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>{{ 'Users' }}</h1>
+    {% for user in users %}
+    {% if user != current_user %}
+    <table class="table table-hover">
+      <tr>
+          <td width="70px">
+              <a href="{{ url_for('main.user', username=user.username) }}">
+                  <img src="{{ user.avatar(70) }}" />
+              </a>
+          </td>
+          <td>
+              {% set user_link %}
+                  <span class="user_popup">
+                      <a href="{{ url_for('main.user', username=user.username) }}">
+                          {{ user.username }}
+                      </a>
+                  </span>
+              {% endset %}
+              User: {{ user.username }}
+              <br><br><br>
+              <input type="checkbox" id="User{{ user.id }}Hack">
+              <label for="User{{ user.id }}Hack">I want to hack {{ user.username }}</label>
+          </td>
+      </tr>
+  </table>
+  {% endif %}
+    {% endfor %}
+{% endblock %}
