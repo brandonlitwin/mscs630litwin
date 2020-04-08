@@ -9,3 +9,7 @@ class EditProfileForm(FlaskForm):
 class MessageForm(FlaskForm):
     message = TextAreaField('Message', validators=[DataRequired(), Length(min=0, max=140)])
     submit = SubmitField('Submit')
+
+class HackerForm(FlaskForm):
+    hacker_choice = TextAreaField('Enter username', validators=[DataRequired()])
+    submit = SubmitField('Submit')

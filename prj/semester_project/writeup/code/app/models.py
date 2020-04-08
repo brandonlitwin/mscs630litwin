@@ -49,6 +49,12 @@ class Message(db.Model):
     def __repr__(self):
         return '<Message {}>'.format(self.body)
 
+class Hacker(db.Model):
+  hacker = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+  victim = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+  def __repr__(self):
+      return '<Hacker {} Victim {}>'.format(self.hacker, self.victim)
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

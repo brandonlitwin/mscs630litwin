@@ -3,8 +3,8 @@ from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_user, logout_user, login_required
 from app import db
-from app.main.forms import EditProfileForm, MessageForm
-from app.models import User, Message
+from app.main.forms import EditProfileForm, MessageForm, HackerForm
+from app.models import User, Message, Hacker
 from app.main import bp
 
 
@@ -82,9 +82,21 @@ def messages():
     return render_template('messages.html', messages=messages.items,
                            next_url=next_url, prev_url=prev_url)
 
-@bp.route('/users')
+@bp.route('/users', methods=['GET', 'POST'])
 @login_required
 def users():
+    form = HackerForm()
+    if form.validate_on_submit:
+        choice = form.hacker_choice.data
+        user = User.query.filter_by(username=choice).first()
+        if user is None:
+            flash('Please enter a valid username (check spelling)')
+        else:
+            hacker = Hacker(hacker=current_user.id, victim=user.id)
+            db.session.add(hacker)
+            db.session.commit()
+            flash('You have chosen {}'.format(choice))
+            
     page = request.args.get('page', 1, type=int)
     users = User.query.all()
-    return render_template('users.html', users=users)
+    return render_template('users.html', users=users, form=form)

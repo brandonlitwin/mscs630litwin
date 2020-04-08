@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <h1>{{ 'Users' }}</h1>
+    <p>Click a user to open their profile and send a message.</p>
     {% for user in users %}
     {% if user != current_user %}
     <table class="table table-hover">
@@ -20,12 +22,18 @@
                   </span>
               {% endset %}
               User: {{ user.username }}
-              <br><br><br>
+              <!--br><br><br>
               <input type="checkbox" id="User{{ user.id }}Hack">
-              <label for="User{{ user.id }}Hack">I want to hack {{ user.username }}</label>
+              <label for="User{{ user.id }}Hack">I want to hack {{ user.username }}</label-->
           </td>
       </tr>
   </table>
   {% endif %}
-    {% endfor %}
+  {% endfor %}
+  <br><p>Enter username of user you wish to hack.</p>
+  <div class="row">
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
 {% endblock %}
