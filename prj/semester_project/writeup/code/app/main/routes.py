@@ -86,7 +86,7 @@ def messages():
 @login_required
 def users():
     form = HackerForm()
-    if form.validate_on_submit:
+    if form.validate_on_submit and request.method=='POST':
         choice = form.hacker_choice.data
         user = User.query.filter_by(username=choice).first()
         if user is None:
@@ -99,4 +99,16 @@ def users():
             
     page = request.args.get('page', 1, type=int)
     users = User.query.all()
-    return render_template('users.html', users=users, form=form)
+    hacker = Hacker.query.filter_by(hacker=current_user.id).first()
+    if hacker:
+        victim = User.query.filter_by(id=hacker.victim).first()
+    return render_template('users.html', users=users, form=form, victim=victim)
+
+@bp.route('/hacked_messages')
+@login_required
+def hacked_messages():
+    hacker = Hacker.query.filter_by(hacker=current_user.id).first()
+    victim = None
+    if hacker:
+        victim = User.query.filter_by(id=hacker.victim).first()
+    return render_template('hacked_messages.html', victim=victim) 

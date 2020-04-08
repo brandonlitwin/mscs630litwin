@@ -30,10 +30,14 @@
   </table>
   {% endif %}
   {% endfor %}
+  {% if victim %}
+  <p>You have chosen to hack {{ victim.username }}</p>
+  {% else %}
   <br><p>Enter username of user you wish to hack.</p>
   <div class="row">
     <div class="col-md-4">
         {{ wtf.quick_form(form) }}
     </div>
-</div>
+  </div>
+  {% endif %}
 {% endblock %}

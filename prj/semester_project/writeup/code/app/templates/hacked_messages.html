@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block app_content %}
+  <h1>Hacked Messages</h1>
+  {% if victim %}
+  <p>You are currently hacking {{ victim.username }}</p>
+  {% else %}
+  <p>You are not hacking anyone yet.</p>
+  {% endif %}
+
+{% endblock %}
