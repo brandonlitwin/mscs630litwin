@@ -119,16 +119,17 @@ def hacked_messages():
     form = DecryptForm()
     hacker = Hacker.query.filter_by(hacker=current_user.id).first()
     victim = None
+    messages = None
     if hacker:
         victim = User.query.filter_by(id=hacker.victim).first()
     page = request.args.get('page', 1, type=int)
-    messages = victim.messages_received.order_by(
-        Message.timestamp.desc()).paginate(
+    if victim is not None:
+        messages = victim.messages_received.order_by(Message.timestamp.desc()).paginate(
             page, 10, False)
-    next_url = url_for('main.messages', page=messages.next_num) \
-        if messages.has_next else None
-    prev_url = url_for('main.messages', page=messages.prev_num) \
-        if messages.has_prev else None
+        next_url = url_for('main.messages', page=messages.next_num) \
+            if messages.has_next else None
+        prev_url = url_for('main.messages', page=messages.prev_num) \
+            if messages.has_prev else None
     decrypt = False
     if request.method=='POST':
         if form.decrypt_password.data == "testpass":
@@ -136,7 +137,10 @@ def hacked_messages():
             decrypt = True
         else:
             flash("Hacking attempt failed")
-    return render_template('hacked_messages.html', victim=victim, messages=messages.items, decrypt=decrypt, form=form) 
+    if messages is not None:      
+        return render_template('hacked_messages.html', victim=victim, messages=messages.items, decrypt=decrypt, form=form)
+    else:
+        return render_template('hacked_messages.html', victim=victim,decrypt=decrypt, form=form) 
 
 def _generate_encrypt_pass(data):
     new_pass = "testpass"

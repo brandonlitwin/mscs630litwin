@@ -4,7 +4,7 @@
     <h1>{{ 'Messages' }}</h1>
     {% if decrypt == False %}
     <form action="" method="POST">
-        <input type="submit" name="decrypt" value="Decrypt all messages" />
+        <input class="btn btn-info btn-ghost" type="submit" name="decrypt" value="Decrypt all messages" />
     </form>
     {% endif %}
     {% for message in messages %}

@@ -5,16 +5,20 @@
   <h1>Hacked Messages</h1>
   {% if victim %}
   <p>You are currently hacking {{ victim.username }}</p>
-  {% else %}
-  <p>You are not hacking anyone yet.</p>
-  {% endif %}
   {% if decrypt == False %}
   <div class="row">
     <div class="col-md-4">
-        {{ wtf.quick_form(form) }}
+      <form method="POST" action="">
+        {{ form.decrypt_password.label }}: {{ form.decrypt_password(class_="form-control") }}
+        {{ form.submit(class_="btn btn-info btn-ghost", value="Attempt to Decrypt") }}
+      </form>
     </div>
   </div>
     {% endif %}
+  {% else %}
+  <p>You are not hacking anyone yet.</p>
+  {% endif %}
+ 
     {% for message in messages %}
     <table class="table table-hover">
       <tr>
