@@ -6,5 +6,54 @@
   {% else %}
   <p>You are not hacking anyone yet.</p>
   {% endif %}
+  {% if decrypt == False %}
+    <form action="" method="POST">
+        <input type="submit" name="decrypt" value="Decrypt all messages" />
+    </form>
+    {% endif %}
+    {% for message in messages %}
+    <table class="table table-hover">
+      <tr>
+          <td width="70px">
+              <a href="{{ url_for('main.user', username=message.sender.username) }}">
+                  <img src="{{ message.sender.avatar(70) }}" />
+              </a>
+          </td>
+          <td>
+              {% set user_link %}
+                  <span class="user_popup">
+                      <a href="{{ url_for('main.user', username=message.sender.username) }}">
+                          {{ message.sender.username }}
+                      </a>
+                  </span>
+              {% endset %}
+              From: {{message.sender.username}} at {{message.timestamp}}
+              <br><br>
+              {% if decrypt %}
+              <span id="message{{ message.id }}decrypted">Plaintext: {{ message.body }}</span>
+              {% else %}
+              <span id="message{{ message.id }}encrypted">Ciphertext: {{ message.encrypted }}</span>
+              {% endif %}
+              {% if message.recipient_id == current_user.id %}
+              <br><br><span id="message{{ message.id }}key">Key: {{ message.key }}</span>
+              {% endif %}
+          </td>
+      </tr>
+  </table>
+    {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> {{ 'Newer messages' }}
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    {{ 'Older messages' }} <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 {% endblock %}

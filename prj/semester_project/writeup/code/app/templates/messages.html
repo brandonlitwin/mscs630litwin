@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <style>
-        .decryptedMessage {
-            display: none;
-        }
-    </style>
     <h1>{{ 'Messages' }}</h1>
+    {% if decrypt == False %}
+    <form action="" method="POST">
+        <input type="submit" name="decrypt" value="Decrypt all messages" />
+    </form>
+    {% endif %}
     {% for message in messages %}
     <table class="table table-hover">
       <tr>
@@ -25,40 +25,17 @@
               {% endset %}
               From: {{message.sender.username}} at {{message.timestamp}}
               <br><br>
+              {% if decrypt %}
+              <span id="message{{ message.id }}decrypted">Plaintext: {{ message.body }}</span>
+              {% else %}
               <span id="message{{ message.id }}encrypted">Ciphertext: {{ message.encrypted }}</span>
-
+              {% endif %}
               {% if message.recipient_id == current_user.id %}
               <br><br><span id="message{{ message.id }}key">Key: {{ message.key }}</span>
-              <br><br><span class="decryptedMessage" id="message{{ message.id }}decrypted" style="display: none;"></span><br><br>
-              <button id="message{{ message.id }}decryptbutton" onclick='showDecryption("message{{ message.id }}decrypted", "{{message.body}}")'>Decrypt</button>
               {% endif %}
           </td>
       </tr>
   </table>
-  <script>
-    /*function showDecryption() {
-        var messages = document.getElementsByClassName("decryptedMessage");
-        var i;
-        for (i = 0; i < messages.length; i++) {
-            if (messages[i].style.display === "none") {
-                messages[i].style.display = "block";
-            } else {
-                messages[i].style.display = "none";
-            }
-        }
-        
-    }*/
-    function showDecryption(decryptMessageID, body) {
-        var x = document.getElementById(decryptMessageID);
-        if (x.style.display === "none") {
-          x.style.display = "block";
-          x.innerHTML = body;
-        } else {
-          x.style.display = "none";
-          x.innerHTML = "";
-        }
-    }
-</script>
     {% endfor %}
     <nav aria-label="...">
         <ul class="pager">

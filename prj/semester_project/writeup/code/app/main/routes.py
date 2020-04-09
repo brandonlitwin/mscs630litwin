@@ -71,7 +71,7 @@ def send_message(recipient):
         return redirect(url_for('main.user', username=recipient))
     return render_template('send_message.html', title='Send Message', form=form, recipient=recipient)
 
-@bp.route('/messages')
+@bp.route('/messages', methods=['GET', 'POST'])
 @login_required
 def messages():
     current_user.last_message_read_time = datetime.utcnow()
@@ -84,8 +84,11 @@ def messages():
         if messages.has_next else None
     prev_url = url_for('main.messages', page=messages.prev_num) \
         if messages.has_prev else None
+    decrypt = False
+    if request.method=='POST':
+        decrypt = True
     return render_template('messages.html', messages=messages.items,
-                           next_url=next_url, prev_url=prev_url)
+                           next_url=next_url, prev_url=prev_url, decrypt=decrypt)
 
 @bp.route('/users', methods=['GET', 'POST'])
 @login_required
@@ -110,14 +113,25 @@ def users():
         victim = User.query.filter_by(id=hacker.victim).first()
     return render_template('users.html', users=users, form=form, victim=victim)
 
-@bp.route('/hacked_messages')
+@bp.route('/hacked_messages', methods=['GET','POST'])
 @login_required
 def hacked_messages():
     hacker = Hacker.query.filter_by(hacker=current_user.id).first()
     victim = None
     if hacker:
         victim = User.query.filter_by(id=hacker.victim).first()
-    return render_template('hacked_messages.html', victim=victim) 
+    page = request.args.get('page', 1, type=int)
+    messages = victim.messages_received.order_by(
+        Message.timestamp.desc()).paginate(
+            page, 10, False)
+    next_url = url_for('main.messages', page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('main.messages', page=messages.prev_num) \
+        if messages.has_prev else None
+    decrypt = False
+    if request.method=='POST':
+        decrypt = True
+    return render_template('hacked_messages.html', victim=victim, messages=messages.items, decrypt=decrypt) 
 
 def _generate_encrypt_pass(data):
     new_pass = "testpass"
