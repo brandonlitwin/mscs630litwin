@@ -119,8 +119,6 @@ def hacked_messages():
         victim = User.query.filter_by(id=hacker.victim).first()
     return render_template('hacked_messages.html', victim=victim) 
 
-@bp.route('/_generate_encrypt_pass')
-@login_required
 def _generate_encrypt_pass(data):
     new_pass = "testpass"
     return new_pass

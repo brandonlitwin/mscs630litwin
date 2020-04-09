@@ -20,6 +20,7 @@
           </a>
         </p>
         {% endif %}
+        {% if user == current_user %}
         {% if user.encrypt_password %}
         <p>You have an encryption password. Hope it doesn't get hacked!</p>
         {% else %}
@@ -28,12 +29,9 @@
         <input type="submit" name="generatePass" value="Generate a Password" />
         </form>
         {% endif %}
+        {% endif %}
       </td>
   </tr>
 </table>
-<!--script>
-  function sendPassRequest(data) {
 
-  }
-</script-->
 {% endblock %}
