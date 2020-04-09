@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
   password_hash = db.Column(db.String(128))
   about_me = db.Column(db.String(140))
   last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+  encrypt_password = db.Column(db.String(128))
   messages_sent = db.relationship('Message',
                                     foreign_keys='Message.sender_id',
                                     backref='sender', lazy='dynamic')

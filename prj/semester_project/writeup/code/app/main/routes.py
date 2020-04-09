@@ -20,10 +20,15 @@ def before_request():
 def index():
     return render_template('index.html', title='Home')
 
-@bp.route('/user/<username>')
+@bp.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
+    if request.method=='POST':
+        new_pass = _generate_encrypt_pass(user.about_me)
+        user.encrypt_password = new_pass
+        db.session.commit()
+        flash("Your password is {}".format(new_pass))
     return render_template('user.html', user=user)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
@@ -100,6 +105,7 @@ def users():
     page = request.args.get('page', 1, type=int)
     users = User.query.all()
     hacker = Hacker.query.filter_by(hacker=current_user.id).first()
+    victim = None
     if hacker:
         victim = User.query.filter_by(id=hacker.victim).first()
     return render_template('users.html', users=users, form=form, victim=victim)
@@ -112,3 +118,9 @@ def hacked_messages():
     if hacker:
         victim = User.query.filter_by(id=hacker.victim).first()
     return render_template('hacked_messages.html', victim=victim) 
+
+@bp.route('/_generate_encrypt_pass')
+@login_required
+def _generate_encrypt_pass(data):
+    new_pass = "testpass"
+    return new_pass
