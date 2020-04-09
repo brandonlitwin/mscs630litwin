@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_user, logout_user, login_required
 from app import db
-from app.main.forms import EditProfileForm, MessageForm, HackerForm
+from app.main.forms import EditProfileForm, MessageForm, HackerForm, DecryptForm
 from app.models import User, Message, Hacker
 from app.main import bp
 
@@ -116,6 +116,7 @@ def users():
 @bp.route('/hacked_messages', methods=['GET','POST'])
 @login_required
 def hacked_messages():
+    form = DecryptForm()
     hacker = Hacker.query.filter_by(hacker=current_user.id).first()
     victim = None
     if hacker:
@@ -130,8 +131,12 @@ def hacked_messages():
         if messages.has_prev else None
     decrypt = False
     if request.method=='POST':
-        decrypt = True
-    return render_template('hacked_messages.html', victim=victim, messages=messages.items, decrypt=decrypt) 
+        if form.decrypt_password.data == "testpass":
+            flash("Hacking successful!")
+            decrypt = True
+        else:
+            flash("Hacking attempt failed")
+    return render_template('hacked_messages.html', victim=victim, messages=messages.items, decrypt=decrypt, form=form) 
 
 def _generate_encrypt_pass(data):
     new_pass = "testpass"

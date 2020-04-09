@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, TextAreaField
+from wtforms import SubmitField, TextAreaField, StringField
 from wtforms.validators import Length, DataRequired
 
 class EditProfileForm(FlaskForm):
@@ -12,4 +12,8 @@ class MessageForm(FlaskForm):
 
 class HackerForm(FlaskForm):
     hacker_choice = TextAreaField('Enter username', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class DecryptForm(FlaskForm):
+    decrypt_password = StringField('Enter password', validators=[DataRequired()])
     submit = SubmitField('Submit')
