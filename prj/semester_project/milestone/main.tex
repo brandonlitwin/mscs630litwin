@@ -1,0 +1,152 @@
+\documentclass[conference]{csce}
+
+\usepackage[hmargin=.75in,vmargin=1in]{geometry}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{url}
+
+%%% Class name, option, and packages above are mandatory for generating an appropriate format 
+%%% suitable for the CSCE style. Therefore, do not make any changes unless you know 
+%%% what you are doing.
+%%% However, if you need to use the subfig package, you must call it BEFORE the caption package.
+%%% (NOTE: the subfig package probably will work but has not been tested.)
+
+%%% The csce.cls is derived (in a quite dirty and quick manner) from the IEEEtrans.cls.
+%%% At least the following packages are incompatible with the csce.cls:
+%%% <DO NOT USE THEM> setspace, titlesec, amsthm
+%%% There may be more, so if you use a package that produces a lot of errors or weird results, 
+%%% be advised to avoid that package.
+
+%%% Below packages are recommended to use for better results and compatible with the csce.cls
+\usepackage{textcomp}
+\usepackage{epsfig,graphicx}
+\usepackage{xcolor}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{fixltx2e} % Fixing numbering problem when using figure/table* 
+\usepackage{booktabs}
+
+%%% Below packages are probably useful for some table-formatting purposes. Compatibility is not yet
+%%% tested but probably fine.
+%\usepackage{tabularx}
+%\usepackage{tabulary}
+
+%%% Using the hyperref package is not really necessary for conference papers, but if your paper includes
+%%% a lot of URLs, and you wish them to be line-breakable, it might be useful.  When you need to use the
+%%% hyperref package, make sure you set <colorlinks option> = true and all link colors black as shown in
+%%% the sample below (the sample calls the ifpdf package, too).
+%\usepackage{ifpdf} 
+%\ifpdf
+%\usepackage[pdftex,naturalnames,breaklinks=true,colorlinks=true,linkcolor=black,citecolor=black,filecolor=black,menucolor=black,urlcolor=black]{hyperref}
+%\else
+%\usepackage[dvips,naturalnames,breaklinks=true]{hyperref}
+%\fi
+
+\columnsep 6mm  %%% DO NOT CHANGE THIS
+
+
+\title{\bf Pass a Note, Peek a Note - An AES Encrypted Messaging and Hacking Simulation System}          
+
+%%%% Replace the author and institution/affiliation names. 
+%%%% Make sure the author names are boldface.
+\author{
+{\bfseries Brandon Litwin}\\
+Department of Computer Science, School of Computer Science and Mathematics\\
+Marist College, 3399 North Road, Poughkeepsie, New York 12601\\
+}
+
+\begin{document}
+
+
+\maketitle                        %%%% To set Title and Author names.
+
+
+\begin{abstract}
+AES is one of the best and most popular symmetric encryption algorithms designed to protect data. In this paper, I discuss the design of my Flask web page that implements AES in order to allow users to send encrypted messages to each other. In addition, encrypted messages will be sent to a third-party who selects the recipient to hack. It is the hacker's job to read the user's profile and extract their password from their personal information, which acts as an example of why users should complicate their passwords.
+\end{abstract}
+
+
+\vspace{1em}
+\noindent\textbf{Keywords:}
+ {\small  AES, symmetric encryption, cybersecurity, password cracking} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+Advanced Encryption Standard (AES) is a symmetric encryption algorithm that became a U.S. federal government standard in 2002. It has been praised for its efficiency and ease of implementation. Of course, a chain is only as strong as its weakest link. It does not matter how many bits an encryption key is or how many rounds an algorithm uses to generate its keys if a system has another vulnerability that is easily exploitable. \\
+\indent My motivation comes from the simple idea of Alice and Bob, the cryptography couple, and Eve, their nosy neighbor. An example of this is depicted in Fig. \ref{fig:abe}. The idea of two people wanting to pass a message to each other and an unwanted third-party secretly trying to take a peek is the basis of all encryption algorithms, and is why my project is simply called Pass a Note, Peek a Note, or PaNPaN. \\
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{AliceBobEve.jpeg}
+    \caption{Alice wants to pass a note to Bob, but Eve is trying to peek!}
+    \label{fig:abe}
+\end{figure}
+\indent In this paper, I will discuss my idea of an AES encrypted messaging system that is vulnerable to hacking. By demonstrating this system, I believe it will be clear how important defense in depth is and why we should use passwords that are not easy to crack from publicly available information. 
+
+\section{Background and Other Work}
+People have a history of using incredibly simple passwords. Passwords created by people are typically components of dictionary words and numbers that have a certain personal connection to them \cite{understanding passwords}. Most account creation systems encourage password complication by requiring a minimum length as well as a special character and number. People also follow simple rules to try and complicate them including, in order of frequency, concatenation, replacement, spelling mistake, and insertion \cite{understanding passwords}. If we can understand the process by which people create passwords, we can more easily determine how to crack them. 
+
+\section{Methodologies}
+My system does not have people create passwords to protect their messages. Instead, it generates a password based on words found in the user's profile page. The generated password is a simple lowercase concatenation of these words. This is done to simulate an incredibly simple password that someone may create based on their personal information.
+\\ \indent The general use case of PaNPaN is as follows: \\
+\begin{enumerate}
+    \item User creates an account.
+    \item User writes some personal information in the "About Me" section of their profile.
+    \item User sends a message to another user, which is AES encrypted.
+    \item User chooses another user to hack and becomes a Hacker.
+    \item Hacker receives all the messages from the user they chose to hack.
+    \item Hacker attempts to brute-force the decryption password by using that user's public profile information.
+    \item Upon successful hack, the victim is notified and their name is displayed on the Hall of Shame.
+    \item The victim must edit their profile and generate a new password.
+\end{enumerate}
+\indent By gamifying the hacking process, hackers are encouraged to get creative in their password cracking. The system is built in such a way that it is very difficult for a user to not get hacked because they have very little interference in the way their passwords are generated. The point is to demonstrate that no matter how great an encryption algorithm like AES is, it means very little if there is another weak point in the system.
+\section{Milestone Progress}
+As of the milestone deadline, I have created most of the basic features of the website. This includes the account creation, profile editing, message sending with AES encryption, and hackers receiving their victim's messages and entering a password to decrypt it. However, I have not yet developed the password generation system based on the user's information, so clicking "Generate Password" will always generate the password "testpass".
+
+\section{Future Improvements}
+The final version will have a simple password generation system that works as I have described in the Methodologies section. In addition, the Hall of Shame will be added with a running count of how many times someone has been hacked. Also, the user does not yet get notified when the hacking attempt is successful.
+
+\section{Conclusions}
+
+The Python code for this project has been made available at:
+\begin{center}
+    {\small \url{github.com/brandonlitwin/mscs630litwin.git}}
+\end{center} 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Reference
+%% Below is an example of bibliography that contains all entries within this document.
+%% You can also let BibTeX generate your bibliography by inserting the following two commands:
+%%
+%% \bibliographystyle{IEEEtran}
+%% \bibliography{<your_bibliography_file_1>,<your_bibliography_file_2>,...}
+%%
+%% Note that you need to make sure that LaTeX (BibTeX) can find IEEEtrans.bst in your system.
+%% If you are unsure about that, just place IEEEtrans.bst in the same directory where your LaTeX source files reside.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Below thebibliography environment will be automatically created in a different file (your_file_name.bbl) 
+%%% if you use BibTeX and specify IEEEtrans.bst.
+
+
+\begin{thebibliography}{}
+\providecommand{\newblock}{\relax}
+%
+% and use \bibitem to create references. Consult the Instructions
+% for authors for reference list style.
+%
+\bibitem{understanding passwords}
+Jakobsson, Markus, and Mayank Dhiman. \newblock {\em ``The benefits of understanding passwords.``} Mobile Authentication. Springer, New York, NY, 2013. 5-24.
+
+\end{thebibliography}
+
+
+
+\end{document}
+
