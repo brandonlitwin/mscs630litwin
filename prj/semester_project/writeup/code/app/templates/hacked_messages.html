@@ -5,7 +5,7 @@
   <h1>Hacked Messages</h1>
   {% if victim %}
   <p>You are currently hacking {{ victim.username }}</p>
-  {% if decrypt == False %}
+  {% if hacker.successful == False %}
   <div class="row">
     <div class="col-md-4">
       <form method="POST" action="">
@@ -37,7 +37,7 @@
               {% endset %}
               From: {{message.sender.username}} at {{message.timestamp}}
               <br><br>
-              {% if decrypt %}
+              {% if hacker.successful == True %}
               <span id="message{{ message.id }}decrypted">Plaintext: {{ message.body }}</span>
               {% else %}
               <span id="message{{ message.id }}encrypted">Ciphertext: {{ message.encrypted }}</span>

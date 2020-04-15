@@ -5,7 +5,7 @@
   <tr>
       <td width="256px"><img src="{{ user.avatar(256) }}"></td>
       <td>
-        <h1>{{ user.username }}</h1>
+        <h1>{{ user.username }} - About Me</h1>
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
         {% if user.last_seen %}
                 <p>Last seen on: {{ user.last_seen }}</p>
@@ -21,10 +21,17 @@
         </p>
         {% endif %}
         {% if user == current_user %}
-        {% if user.encrypt_password %}
+        {% if user.encrypt_password and victim.successful == False %}
         <p>You have an encryption password. Hope it doesn't get hacked!</p>
+        {% elif victim.successful == True %}
+        <p>You were hacked! Make sure to edit your profile with new information and generate a new password!</p>
+        <p>You must have at least 3 words greater than 4 characters in your about me to generate a password.</p> 
+        <form action="" method="POST">
+        <input class="btn btn-info btn-ghost" type="submit" name="generatePass" value="Generate a Password" />
+        </form>
         {% else %}
-        <p>You don't have an encryption password yet!</p> 
+        <p>You don't have an encryption password yet!</p>
+        <p>You must have at least 3 words greater than 4 characters in your about me to generate a password.</p> 
         <form action="" method="POST">
         <input class="btn btn-info btn-ghost" type="submit" name="generatePass" value="Generate a Password" />
         </form>

@@ -53,8 +53,13 @@ class Message(db.Model):
 class Hacker(db.Model):
   hacker = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
   victim = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+  successful = db.Column(db.Boolean, default=False)
   def __repr__(self):
       return '<Hacker {} Victim {}>'.format(self.hacker, self.victim)
+
+  def change_hack_status(self, status):
+    self.successful = status
+
 
 @login.user_loader
 def load_user(id):

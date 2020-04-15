@@ -18,18 +18,28 @@ def before_request():
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    return render_template('index.html', title='Home')
+    victim = None
+    victim = Hacker.query.filter_by(victim=current_user.id).first()
+    if victim is not None and victim.successful:
+        flash('You have been hacked! Go back to your profile and generate a new password ASAP!! Make sure you change the about me text to generate a different password')
+    return render_template('index.html', title='Home', victim=victim)
 
 @bp.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
+    victim = None
+    victim = Hacker.query.filter_by(victim=current_user.id).first()
     user = User.query.filter_by(username=username).first_or_404()
     if request.method=='POST':
         new_pass = _generate_encrypt_pass(user.about_me)
-        user.encrypt_password = new_pass
-        db.session.commit()
-        flash("Your password is {}".format(new_pass))
-    return render_template('user.html', user=user)
+        if new_pass == "error":
+            flash('You must have at least 3 words greater than 4 characters in your profile to generate a password.')
+        else:  
+            user.encrypt_password = new_pass
+            victim.change_hack_status(False)
+            db.session.commit()
+            flash("Your password is {}".format(new_pass))
+    return render_template('user.html', user=user, victim=victim)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -133,20 +143,29 @@ def hacked_messages():
     decrypt = False
     if request.method=='POST':
         if form.decrypt_password.data == victim.encrypt_password:
+            hacker.change_hack_status(True)
+            db.session.commit()
             flash("Hacking successful!")
-            decrypt = True
         else:
             flash("Hacking attempt failed")
+
+    # query hacker again in case status changed
+    #hacker = Hacker.query.filter_by(hacker=current_user.id).first()
     if messages is not None:      
-        return render_template('hacked_messages.html', victim=victim, messages=messages.items, decrypt=decrypt, form=form)
+        return render_template('hacked_messages.html', victim=victim, messages=messages.items, form=form, hacker=hacker)
     else:
-        return render_template('hacked_messages.html', victim=victim,decrypt=decrypt, form=form) 
+        return render_template('hacked_messages.html', victim=victim, form=form, hacker=hacker) 
 
 def _generate_encrypt_pass(about_me_string):
     import re, string, random
-    words = re.sub('['+string.punctuation+']', '', about_me_string).split()
-    words_filtered = random.sample(list(filter(lambda x: len(x) > 4, words)), k=3)
     new_pass = ""
-    for word in words_filtered:
-        new_pass += word.lower()
+    words = re.sub('['+string.punctuation+']', '', about_me_string).split()
+    try:
+        words_filtered = random.sample(list(filter(lambda x: len(x) > 4, words)), k=3)
+        for word in words_filtered:
+            new_pass += word.lower()
+    except ValueError:
+        new_pass = "error"
+    if new_pass == "":
+        new_pass = "error"
     return new_pass
