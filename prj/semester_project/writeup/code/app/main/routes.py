@@ -132,7 +132,7 @@ def hacked_messages():
             if messages.has_prev else None
     decrypt = False
     if request.method=='POST':
-        if form.decrypt_password.data == "testpass":
+        if form.decrypt_password.data == victim.encrypt_password:
             flash("Hacking successful!")
             decrypt = True
         else:
@@ -142,6 +142,11 @@ def hacked_messages():
     else:
         return render_template('hacked_messages.html', victim=victim,decrypt=decrypt, form=form) 
 
-def _generate_encrypt_pass(data):
-    new_pass = "testpass"
+def _generate_encrypt_pass(about_me_string):
+    import re, string, random
+    words = re.sub('['+string.punctuation+']', '', about_me_string).split()
+    words_filtered = random.sample(list(filter(lambda x: len(x) > 4, words)), k=3)
+    new_pass = ""
+    for word in words_filtered:
+        new_pass += word.lower()
     return new_pass
