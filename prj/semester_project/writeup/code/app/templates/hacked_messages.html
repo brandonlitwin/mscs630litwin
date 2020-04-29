@@ -42,7 +42,7 @@
               {% else %}
               <span id="message{{ message.id }}encrypted">Ciphertext: {{ message.encrypted }}</span>
               {% endif %}
-              {% if message.recipient_id == current_user.id %}
+              {% if message.recipient_id == current_user.id or hacker.successful == True %}
               <br><br><span id="message{{ message.id }}key">Key: {{ message.key }}</span>
               {% endif %}
           </td>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+  <h1>Hall of Shame</h1>
+  <p>Here you can see the top hackers and top victims.</p>
+  <p>If you are on the top hackers list, good job!</p>
+  <p>If you are high on the other list, you need to step up your game.</p>
+
+  <h1>Top Hackers</h1>
+  <table class="table table-hover">
+    <tr>
+      <th>User</th>
+      <th># of Successful Hacks</th>
+    </tr>
+    {% for hacker in hackers %}
+    <tr>
+      <td>{{hacker.username}}</td>
+      <td>{{hacker.successful_hacks}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h1>Top Victims</h1>
+  <table class="table table-hover">
+    <tr>
+      <th>User</th>
+      <th># of Times Hacked</th>
+    </tr>
+    {% for victim in victims %}
+    <tr>
+      <td>{{victim.username}}</td>
+      <td>{{victim.times_hacked}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+{% endblock %}

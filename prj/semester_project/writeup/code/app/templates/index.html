@@ -6,6 +6,7 @@
 <p>To start, please <a href="{{ url_for('main.user', username=current_user.username) }}">edit your profile</a>.
 <p>Next, send a message to <a href="{{ url_for('main.users') }}">another user</a>.</p>
 <p>Finally, choose a user to hack.</p>
+<p>Be sure to check the <a href="{{ url_for('main.hall_of_shame') }}">Hall of Shame</a> regularly to see how you're doing against other hackers.</p>
 {% if victim and victim.successful == False %}
 <p>Beware, someone has chosen to hack you!</p>
 {% endif %}

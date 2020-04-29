@@ -24,6 +24,13 @@ def index():
         flash('You have been hacked! Go back to your profile and generate a new password ASAP!! Make sure you change the about me text to generate a different password')
     return render_template('index.html', title='Home', victim=victim)
 
+@bp.route('/hall_of_shame')
+@login_required
+def hall_of_shame():
+    hackers = User.query.order_by(User.successful_hacks.desc()).all()
+    victims = User.query.order_by(User.times_hacked.desc()).all()
+    return render_template('hall_of_shame.html', hackers=hackers, victims=victims)
+
 @bp.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):

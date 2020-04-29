@@ -20,6 +20,9 @@
         <div class="pull-right">»</div>
     </a>
     {% else %}
+    <a class="menu-item" href="{{ url_for('main.hall_of_shame') }}">Hall of Shame
+        <div class="pull-right">»</div>
+    </a>
     <a class="menu-item" href="{{ url_for('main.messages') }}">Messages
         <div class="pull-right">»</div>
         {% set new_messages = current_user.new_messages() %}
