@@ -19,6 +19,8 @@ class User(UserMixin, db.Model):
                                         foreign_keys='Message.recipient_id',
                                         backref='recipient', lazy='dynamic')
   last_message_read_time = db.Column(db.DateTime)
+  times_hacked = db.Column(db.Integer, default=0)
+  successful_hacks = db.Column(db.Integer, default=0)
 
   def __repr__(self):
     return '<User {}>'.format(self.username) 
@@ -37,6 +39,12 @@ class User(UserMixin, db.Model):
   def new_messages(self):
     last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
     return Message.query.filter_by(recipient=self).filter(Message.timestamp > last_read_time).count()
+
+  def hack_successful(self):
+    self.successful_hacks = self.successful_hacks + 1
+
+  def got_hacked(self):
+    self.times_hacked = self.times_hacked + 1
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

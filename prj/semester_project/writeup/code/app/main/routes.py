@@ -144,6 +144,9 @@ def hacked_messages():
     if request.method=='POST':
         if form.decrypt_password.data == victim.encrypt_password:
             hacker.change_hack_status(True)
+            hacker_user = User.query.filter_by(id=current_user.id).first()
+            hacker_user.hack_successful()
+            victim.got_hacked()
             db.session.commit()
             flash("Hacking successful!")
         else:
