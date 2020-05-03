@@ -21,7 +21,7 @@
         </p>
         {% endif %}
         {% if user == current_user %}
-        {% if user.encrypt_password and victim.successful == False %}
+        {% if user.encrypt_password and (victim.successful == False or not victim) %}
         <p>You have an encryption password. Hope it doesn't get hacked!</p>
         {% elif victim.successful == True %}
         <p>You were hacked! Make sure to edit your profile with new information and generate a new password!</p>

@@ -43,7 +43,8 @@ def user(username):
             flash('You must have at least 3 words greater than 4 characters in your profile to generate a password.')
         else:  
             user.encrypt_password = new_pass
-            victim.change_hack_status(False)
+            if victim is not None:
+                victim.change_hack_status(False)
             db.session.commit()
             flash("Your password is {}".format(new_pass))
     return render_template('user.html', user=user, victim=victim)
